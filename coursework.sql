@@ -65,3 +65,6 @@
 --f.id_film = osc.id_film
 --AND rev.id_film = f.id_film
 --AND cat.id_category = osc.ID_CATEGORY;
+--
+--select *
+--from humans

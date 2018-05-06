@@ -5,7 +5,7 @@ const get_result = function () {
   oracledb.getConnection(
     {
       user          : "SYSTEM",
-      password      : "x",
+      password      : "1",
       connectString : "localhost/XE"
     },
     function(err, connection)
@@ -13,8 +13,7 @@ const get_result = function () {
       if (err) { console.error(err); return; }
       connection.execute(
         "SELECT * "
-      + "FROM humans "
-      + "WHERE rownum < 3",
+      + "FROM humans ",
         function(err, result)
         {
           if (err) { console.error(err); return; }
