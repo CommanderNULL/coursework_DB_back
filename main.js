@@ -1,6 +1,7 @@
 var express = require('express');
 var oracledb = require('oracledb');
 var app = express();
+var bodyParser = require('body-parser');
 //const database_ex = require('./database_ex.js');
 var connectionAttr = {
       user          : "SYSTEM",
@@ -102,6 +103,32 @@ app.get('/films/info_review/:id', function(req, res) {
         {
           if (err) { console.error(err); return; }
           res.send(JSON.stringify(result.rows));
+          connection.release();
+        });
+    });
+});
+
+var jsonParser =  bodyParser.json({type: '*/*'});
+
+app.post('/films/add_review', jsonParser, function (req, res) {
+    console.log(req.url);
+    console.log(req.body);
+    res.append('Access-Control-Allow-Origin','*');
+    res.append('Content-type','text/JSON');
+    oracledb.autoCommit = true;
+    oracledb.outFormat = oracledb.OBJECT;
+    const a = `INSERT INTO "SYSTEM"."REVIEWS" (ID_FILM, ID_HUMAN, REVIEW_TEXT, MARK) 
+        VALUES ('`+ req.body.film_id +`', '`+ req.body.user_id +`', '`+ req.body.reviewText +`', '`+ req.body.reviewMark +`')`;
+    console.log(a);
+    oracledb.getConnection(connectionAttr,
+    function(err, connection)
+    {
+      if (err) { console.error(err); return; }
+      connection.execute(a,
+        function(err, result)
+        {
+          if (err) { console.error(err); return; }
+          res.send('SUCCESS!');
           connection.release();
         });
     });
